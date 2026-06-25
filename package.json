@@ -1,0 +1,50 @@
+{
+    "name": "@ceski23/openapi-mcp",
+    "version": "1.0.0-beta.1",
+    "license": "MIT",
+    "author": "Cezary Bober",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/ceski23/openapi-mcp.git"
+    },
+    "bin": {
+        "openapi-mcp": "./dist/index.js"
+    },
+    "files": [
+        "dist/"
+    ],
+    "type": "module",
+    "publishConfig": {
+        "access": "public"
+    },
+    "scripts": {
+        "lint": "oxlint",
+        "format": "oxfmt",
+        "check": "bun run lint && bun run format --check",
+        "typecheck": "bun run tsc --noEmit",
+        "build": "bun build src/index.ts --target=node --outdir=dist --packages=external",
+        "prepublishOnly": "bun run build",
+        "test": "bun test",
+        "check:config": "publint"
+    },
+    "dependencies": {
+        "@modelcontextprotocol/sdk": "1.29.0",
+        "lru-cache": "11.5.1",
+        "oas": "36.0.3",
+        "oas-normalize": "16.0.5",
+        "zod": "4.4.3"
+    },
+    "devDependencies": {
+        "@semantic-release/changelog": "6.0.3",
+        "@semantic-release/git": "10.0.1",
+        "@types/bun": "latest",
+        "oxfmt": "0.56.0",
+        "oxlint": "1.71.0",
+        "publint": "0.3.21",
+        "typescript": "6.0.3"
+    },
+    "engines": {
+        "bun": ">=1.0.0",
+        "node": ">=22"
+    }
+}
