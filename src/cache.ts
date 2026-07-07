@@ -90,4 +90,16 @@ export const getAllCachedSpecs = () =>
         })
         .toArray()
 
+export const removeSpec = (specId: string): boolean => {
+    const spec = specCache.get(specId)
+    if (!spec) return false
+
+    const current = sourceIndex.get(spec.source)
+    if (current?.specId === specId) {
+        sourceIndex.delete(spec.source)
+    }
+
+    specCache.delete(specId)
+
+    return true
 }
