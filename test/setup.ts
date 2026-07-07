@@ -8,6 +8,7 @@ import { getPath } from '../src/tools/get-path'
 import { findSchemas } from '../src/tools/find-schemas'
 import { getSchema } from '../src/tools/get-schema'
 import { searchContract } from '../src/tools/search-contract'
+import { listCachedSpecs } from '../src/tools/list-cached-specs'
 
 export type TestContext = {
     server: McpServer
@@ -28,6 +29,7 @@ export async function createTestContext(): Promise<TestContext> {
         findSchemas,
         getSchema,
         searchContract,
+        listCachedSpecs,
     ]
     for (const { name, description, inputSchema, execute } of tools) {
         server.registerTool(name, { description, inputSchema }, execute)

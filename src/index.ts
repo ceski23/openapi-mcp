@@ -8,6 +8,7 @@ import { getPath } from './tools/get-path'
 import { findSchemas } from './tools/find-schemas'
 import { getSchema } from './tools/get-schema'
 import { searchContract } from './tools/search-contract'
+import { listCachedSpecs } from './tools/list-cached-specs'
 
 const server = new McpServer({
     name: 'openapi-mcp',
@@ -22,6 +23,7 @@ for (const { name, description, inputSchema, execute } of [
     findSchemas,
     getSchema,
     searchContract,
+    listCachedSpecs,
 ]) {
     server.registerTool(name, { description, inputSchema }, execute)
 }

@@ -74,4 +74,20 @@ export const getVersions = (source: string): VersionEntry[] => {
     return sourceIndex.get(source)?.history ?? []
 }
 
+export const getAllCachedSpecs = () =>
+    specCache
+        .entries()
+        .map(([specId, spec]) => {
+            const definition = spec.oas?.getDefinition()
+
+            return {
+                specId,
+                source: spec.source,
+                loadedAt: spec.loadedAt,
+                title: definition?.info?.title,
+                version: definition?.info?.version,
+            }
+        })
+        .toArray()
+
 }
