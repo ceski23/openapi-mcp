@@ -2,17 +2,11 @@ import type { CallToolResult } from '@modelcontextprotocol/sdk/types'
 import type { ToolDefinition } from './types'
 import type { OASDocument, OperationObject } from 'oas/types'
 import type { z } from 'zod'
+import { writeFile, unlink } from 'node:fs/promises'
+import { promisify } from 'node:util'
+import { exec } from 'node:child_process'
 
-export const HTTP_METHODS = [
-    'get',
-    'put',
-    'post',
-    'delete',
-    'options',
-    'head',
-    'patch',
-    'trace',
-] as const
+export const execPromise = promisify(exec)
 
 export type OperationEntry = {
     path: string
@@ -30,7 +24,7 @@ export const MISSING_SPEC_RESPONSE: CallToolResult = {
     isError: true,
 }
 
-type PathItemMethods = {
+export type PathItemMethods = {
     get?: OperationObject
     put?: OperationObject
     post?: OperationObject
@@ -41,7 +35,10 @@ type PathItemMethods = {
     trace?: OperationObject
 }
 
-function* iteratePathItem(path: string, pathItem: PathItemMethods): Generator<OperationEntry> {
+export function* iteratePathItem(
+    path: string,
+    pathItem: PathItemMethods,
+): Generator<OperationEntry> {
     if (pathItem.get) yield { path, method: 'GET', operation: pathItem.get }
     if (pathItem.put) yield { path, method: 'PUT', operation: pathItem.put }
     if (pathItem.post) yield { path, method: 'POST', operation: pathItem.post }
@@ -71,5 +68,17 @@ export const matchesQuery = (
     (operation.summary ?? '').toLowerCase().includes(lowercaseQuery) ||
     (operation.description ?? '').toLowerCase().includes(lowercaseQuery) ||
     (operation.tags ?? []).join(' ').toLowerCase().includes(lowercaseQuery)
+
+export class TempFile implements AsyncDisposable {
+    constructor(readonly path: string) {}
+
+    async write(data: string): Promise<void> {
+        await writeFile(this.path, data)
+    }
+
+    async [Symbol.asyncDispose](): Promise<void> {
+        await unlink(this.path).catch(() => {})
+    }
+}
 
 export const defineTool = <InputArgs extends z.ZodType>(tool: ToolDefinition<InputArgs>) => tool
