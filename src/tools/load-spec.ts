@@ -1,7 +1,7 @@
 import { z } from 'zod'
 import OASNormalize from 'oas-normalize'
 import Oas from 'oas'
-import { setSpec } from '../cache'
+import { setSpec, getSpecBySource, pushVersion, setSourceMapping, getVersions } from '../cache'
 import { defineTool } from '../utils'
 
 export const loadSpec = defineTool({
@@ -20,13 +20,25 @@ export const loadSpec = defineTool({
             const converted = await normalizer.convert()
             const oas = Oas.init(converted as Record<string, unknown>)
             await oas.dereference()
+            const existing = getSpecBySource(source)
 
             const specId = crypto.randomUUID()
-            setSpec(specId, { oas })
+            setSpec(specId, { oas, source, loadedAt: new Date().toISOString() })
+
+            if (existing?.spec.oas) {
+                pushVersion(source, {
+                    specId: existing.specId,
+                    definition: existing.spec.oas.getDefinition(),
+                    loadedAt: existing.spec.loadedAt,
+                })
+            }
+
+            setSourceMapping(source, specId)
 
             const spec = oas.getDefinition()
             const endpointCount = Object.keys(spec.paths ?? {}).length
             const schemaCount = Object.keys(spec.components?.schemas ?? {}).length
+            const versions = getVersions(source)
 
             return {
                 content: [
@@ -42,6 +54,13 @@ export const loadSpec = defineTool({
                                 endpoints: endpointCount,
                                 schemas: schemaCount,
                                 source,
+                                previousVersion: existing
+                                    ? {
+                                          specId: existing.specId,
+                                          loadedAt: existing.spec.loadedAt,
+                                      }
+                                    : undefined,
+                                versions: versions.length + 1,
                             },
                             null,
                             2,
