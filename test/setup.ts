@@ -8,6 +8,7 @@ import { getPath } from '../src/tools/get-path'
 import { findSchemas } from '../src/tools/find-schemas'
 import { getSchema } from '../src/tools/get-schema'
 import { searchContract } from '../src/tools/search-contract'
+import { listVersions } from '../src/tools/list-versions'
 import { listCachedSpecs } from '../src/tools/list-cached-specs'
 import { unloadSpec } from '../src/tools/unload-spec'
 
@@ -30,6 +31,7 @@ export async function createTestContext(): Promise<TestContext> {
         findSchemas,
         getSchema,
         searchContract,
+        listVersions,
         listCachedSpecs,
         unloadSpec,
     ]

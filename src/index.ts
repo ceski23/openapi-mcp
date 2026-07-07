@@ -8,6 +8,7 @@ import { getPath } from './tools/get-path'
 import { findSchemas } from './tools/find-schemas'
 import { getSchema } from './tools/get-schema'
 import { searchContract } from './tools/search-contract'
+import { listVersions } from './tools/list-versions'
 import { listCachedSpecs } from './tools/list-cached-specs'
 import { unloadSpec } from './tools/unload-spec'
 
@@ -24,6 +25,7 @@ for (const { name, description, inputSchema, execute } of [
     findSchemas,
     getSchema,
     searchContract,
+    listVersions,
     listCachedSpecs,
     unloadSpec,
 ]) {
