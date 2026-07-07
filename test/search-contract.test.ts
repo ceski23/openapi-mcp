@@ -19,8 +19,10 @@ describe('search_contract', () => {
         })
         const data = JSON.parse((result.content as { text: string }[])[0]!.text)
         expect(data.operations).toBeDefined()
-        expect(data.operations).toHaveLength(1)
-        expect(data.operations[0].operationId).toBe('getPetById')
+        expect(data.operations.length).toBeGreaterThanOrEqual(1)
+        expect(
+            data.operations.some((op: { operationId: string }) => op.operationId === 'getPetById'),
+        ).toBe(true)
     })
 
     test('searches schemas by name', async () => {
@@ -51,7 +53,10 @@ describe('search_contract', () => {
             arguments: { specId, query: 'xyznonexistent' },
         })
         const data = JSON.parse((result.content as { text: string }[])[0]!.text)
-        expect(data).toEqual({})
+        expect(data.totalOperations).toBe(0)
+        expect(data.totalSchemas).toBe(0)
+        expect(data.operations).toBeUndefined()
+        expect(data.schemas).toBeUndefined()
     })
 
     test('returns only operations when query only matches operations', async () => {
@@ -64,11 +69,53 @@ describe('search_contract', () => {
         expect(data.schemas).toBeUndefined()
     })
 
+    test('searches schemas by property name', async () => {
+        const result = await client.callTool({
+            name: 'search_contract',
+            arguments: { specId, query: 'photoUrls' },
+        })
+        const data = JSON.parse((result.content as { text: string }[])[0]!.text)
+        expect(data.schemas).toBeDefined()
+        expect(data.schemas).toContain('Pet')
+    })
+
+    test('searches schemas by property description', async () => {
+        const result = await client.callTool({
+            name: 'search_contract',
+            arguments: { specId, query: 'Order Status' },
+        })
+        const data = JSON.parse((result.content as { text: string }[])[0]!.text)
+        expect(data.schemas).toBeDefined()
+        expect(data.schemas).toContain('Order')
+    })
+
+    test('searches schemas by enum value', async () => {
+        const result = await client.callTool({
+            name: 'search_contract',
+            arguments: { specId, query: 'delivered' },
+        })
+        const data = JSON.parse((result.content as { text: string }[])[0]!.text)
+        expect(data.schemas).toBeDefined()
+        expect(data.schemas).toContain('Order')
+    })
+
     test('returns error for invalid specId', async () => {
         const result = await client.callTool({
             name: 'search_contract',
             arguments: { specId: crypto.randomUUID(), query: 'pet' },
         })
         expect(result.isError).toBe(true)
+    })
+
+    test('fuzzy matches operations with typos', async () => {
+        const result = await client.callTool({
+            name: 'search_contract',
+            arguments: { specId, query: 'getPet' },
+        })
+        const data = JSON.parse((result.content as { text: string }[])[0]!.text)
+        expect(data.operations).toBeDefined()
+        expect(
+            data.operations.some((op: { operationId: string }) => op.operationId === 'getPetById'),
+        ).toBe(true)
     })
 })

@@ -29,6 +29,7 @@
     },
     "dependencies": {
         "@modelcontextprotocol/sdk": "1.29.0",
+        "fuse.js": "7.4.2",
         "lru-cache": "11.5.1",
         "oas": "36.0.3",
         "oas-normalize": "16.0.5",
