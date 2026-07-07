@@ -1,11 +1,11 @@
 import { z } from 'zod'
 import { getSpec } from '../cache'
-import { MISSING_SPEC_RESPONSE, defineTool } from '../utils'
+import { MISSING_SPEC_RESPONSE, defineTool, iteratePathItem } from '../utils'
 
 export const getPath = defineTool({
     name: 'get_path',
     description:
-        'Retrieve all operations (GET, POST, PATCH, DELETE, etc.) for a specific path. Use when you know the exact path and want the full contract for all methods on it.',
+        'Retrieve all operations (GET, POST, PATCH, DELETE, etc.) for a specific path. Returns a summary of each method on the path. Use get_operation with the operationId for full details.',
     inputSchema: z.object({
         specId: z.string().describe('The spec ID returned by load_spec'),
         path: z.string().describe('The exact path from the spec (e.g. /customers/{id})'),
@@ -25,8 +25,17 @@ export const getPath = defineTool({
             }
         }
 
+        const operations = iteratePathItem(path, pathItem)
+            .map(({ method, operation }) => ({
+                method,
+                operationId: operation.operationId ?? '',
+                ...(operation.tags ? { tags: operation.tags } : {}),
+                ...(operation.summary ? { summary: operation.summary } : {}),
+            }))
+            .toArray()
+
         return {
-            content: [{ type: 'text' as const, text: JSON.stringify(pathItem, null, 2) }],
+            content: [{ type: 'text' as const, text: JSON.stringify(operations, null, 2) }],
         }
     },
 })

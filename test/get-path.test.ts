@@ -18,12 +18,10 @@ describe('get_path', () => {
             arguments: { specId, path: '/pet/{petId}' },
         })
         const data = JSON.parse((result.content as { text: string }[])[0]!.text)
-        expect(data.get).toBeDefined()
-        expect(data.get.operationId).toBe('getPetById')
-        expect(data.post).toBeDefined()
-        expect(data.post.operationId).toBe('updatePetWithForm')
-        expect(data.delete).toBeDefined()
-        expect(data.delete.operationId).toBe('deletePet')
+        expect(data).toHaveLength(3)
+        expect(data[0]).toMatchObject({ method: 'GET', operationId: 'getPetById' })
+        expect(data[1]).toMatchObject({ method: 'POST', operationId: 'updatePetWithForm' })
+        expect(data[2]).toMatchObject({ method: 'DELETE', operationId: 'deletePet' })
     })
 
     test('returns error for non-existent path', async () => {
@@ -42,9 +40,8 @@ describe('get_path', () => {
             arguments: { specId, path: '/store/inventory' },
         })
         const data = JSON.parse((result.content as { text: string }[])[0]!.text)
-        expect(data.get).toBeDefined()
-        expect(data.get.operationId).toBe('getInventory')
-        expect(data.post).toBeUndefined()
+        expect(data).toHaveLength(1)
+        expect(data[0]).toMatchObject({ method: 'GET', operationId: 'getInventory' })
     })
 
     test('returns error for invalid specId', async () => {
