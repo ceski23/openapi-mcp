@@ -18,7 +18,7 @@ describe('find_schemas', () => {
             arguments: { specId, query: 'Pet' },
         })
         const data = JSON.parse((result.content as { text: string }[])[0]!.text)
-        expect(data).toContain('Pet')
+        expect(data.results).toContainEqual(expect.objectContaining({ name: 'Pet' }))
     })
 
     test('finds schemas by lowercase query', async () => {
@@ -27,7 +27,7 @@ describe('find_schemas', () => {
             arguments: { specId, query: 'user' },
         })
         const data = JSON.parse((result.content as { text: string }[])[0]!.text)
-        expect(data).toContain('User')
+        expect(data.results).toContainEqual(expect.objectContaining({ name: 'User' }))
     })
 
     test('returns empty array for no match', async () => {
@@ -36,7 +36,8 @@ describe('find_schemas', () => {
             arguments: { specId, query: 'xyznonexistent' },
         })
         const data = JSON.parse((result.content as { text: string }[])[0]!.text)
-        expect(data).toEqual([])
+        expect(data.results).toEqual([])
+        expect(data.total).toBe(0)
     })
 
     test('returns all schemas with empty query', async () => {
@@ -45,13 +46,24 @@ describe('find_schemas', () => {
             arguments: { specId, query: '' },
         })
         const data = JSON.parse((result.content as { text: string }[])[0]!.text)
-        expect(data).toContain('Pet')
-        expect(data).toContain('User')
-        expect(data).toContain('Order')
-        expect(data).toContain('Category')
-        expect(data).toContain('Tag')
-        expect(data).toContain('ApiResponse')
-        expect(data.length).toBe(6)
+        expect(data.total).toBe(6)
+        expect(data.results).toContainEqual(expect.objectContaining({ name: 'Pet' }))
+        expect(data.results).toContainEqual(expect.objectContaining({ name: 'User' }))
+        expect(data.results).toContainEqual(expect.objectContaining({ name: 'Order' }))
+        expect(data.results).toContainEqual(expect.objectContaining({ name: 'Category' }))
+        expect(data.results).toContainEqual(expect.objectContaining({ name: 'Tag' }))
+        expect(data.results).toContainEqual(expect.objectContaining({ name: 'ApiResponse' }))
+    })
+
+    test('returns schemas with type and description', async () => {
+        const result = await client.callTool({
+            name: 'find_schemas',
+            arguments: { specId, query: 'Order' },
+        })
+        const data = JSON.parse((result.content as { text: string }[])[0]!.text)
+        expect(data.results).toContainEqual(
+            expect.objectContaining({ name: 'Order', type: 'object' }),
+        )
     })
 
     test('returns error for invalid specId', async () => {
