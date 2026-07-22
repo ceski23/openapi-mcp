@@ -75,16 +75,12 @@ export const findOperations = defineTool({
             content: [
                 {
                     type: 'text' as const,
-                    text: JSON.stringify(
-                        {
-                            total,
-                            page,
-                            limit,
-                            results,
-                        },
-                        null,
-                        2,
-                    ),
+                    text: JSON.stringify({
+                        total,
+                        page,
+                        limit,
+                        results,
+                    }),
                 },
             ],
         }

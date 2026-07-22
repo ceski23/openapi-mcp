@@ -33,15 +33,11 @@ export const getOperation = defineTool({
             content: [
                 {
                     type: 'text' as const,
-                    text: JSON.stringify(
-                        {
-                            method: operation.method.toUpperCase(),
-                            path: operation.path,
-                            ...operation.schema,
-                        },
-                        null,
-                        2,
-                    ),
+                    text: JSON.stringify({
+                        method: operation.method.toUpperCase(),
+                        path: operation.path,
+                        ...operation.schema,
+                    }),
                 },
             ],
         }

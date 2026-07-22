@@ -14,20 +14,16 @@ export const listCachedSpecs = defineTool({
             content: [
                 {
                     type: 'text' as const,
-                    text: JSON.stringify(
-                        {
-                            count: specs.length,
-                            specs: specs.map((spec) => ({
-                                specId: spec.specId,
-                                source: spec.source,
-                                loadedAt: spec.loadedAt,
-                                title: spec.title,
-                                version: spec.version,
-                            })),
-                        },
-                        null,
-                        2,
-                    ),
+                    text: JSON.stringify({
+                        count: specs.length,
+                        specs: specs.map((spec) => ({
+                            specId: spec.specId,
+                            source: spec.source,
+                            loadedAt: spec.loadedAt,
+                            title: spec.title,
+                            version: spec.version,
+                        })),
+                    }),
                 },
             ],
         }

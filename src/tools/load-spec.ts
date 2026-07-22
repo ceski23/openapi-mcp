@@ -44,27 +44,23 @@ export const loadSpec = defineTool({
                 content: [
                     {
                         type: 'text' as const,
-                        text: JSON.stringify(
-                            {
-                                success: true,
-                                specId,
-                                title: spec.info?.title,
-                                version: spec.info?.version,
-                                description: spec.info?.description,
-                                endpoints: endpointCount,
-                                schemas: schemaCount,
-                                source,
-                                previousVersion: existing
-                                    ? {
-                                          specId: existing.specId,
-                                          loadedAt: existing.spec.loadedAt,
-                                      }
-                                    : undefined,
-                                versions: versions.length + 1,
-                            },
-                            null,
-                            2,
-                        ),
+                        text: JSON.stringify({
+                            success: true,
+                            specId,
+                            title: spec.info?.title,
+                            version: spec.info?.version,
+                            description: spec.info?.description,
+                            endpoints: endpointCount,
+                            schemas: schemaCount,
+                            source,
+                            previousVersion: existing
+                                ? {
+                                      specId: existing.specId,
+                                      loadedAt: existing.spec.loadedAt,
+                                  }
+                                : undefined,
+                            versions: versions.length + 1,
+                        }),
                     },
                 ],
             }

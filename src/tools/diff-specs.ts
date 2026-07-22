@@ -117,7 +117,7 @@ export const diffSpecs = defineTool({
                 content: [
                     {
                         type: 'text',
-                        text: JSON.stringify(output, null, 2),
+                        text: JSON.stringify(output),
                     },
                 ],
             }

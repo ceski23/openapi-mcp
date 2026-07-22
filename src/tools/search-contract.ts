@@ -130,18 +130,14 @@ export const searchContract = defineTool({
             content: [
                 {
                     type: 'text' as const,
-                    text: JSON.stringify(
-                        {
-                            page,
-                            limit,
-                            totalOperations,
-                            totalSchemas,
-                            ...(operations.length > 0 ? { operations } : {}),
-                            ...(schemas.length > 0 ? { schemas } : {}),
-                        },
-                        null,
-                        2,
-                    ),
+                    text: JSON.stringify({
+                        page,
+                        limit,
+                        totalOperations,
+                        totalSchemas,
+                        ...(operations.length > 0 ? { operations } : {}),
+                        ...(schemas.length > 0 ? { schemas } : {}),
+                    }),
                 },
             ],
         }

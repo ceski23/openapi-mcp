@@ -35,7 +35,7 @@ export const getPath = defineTool({
             .toArray()
 
         return {
-            content: [{ type: 'text' as const, text: JSON.stringify(operations, null, 2) }],
+            content: [{ type: 'text' as const, text: JSON.stringify(operations) }],
         }
     },
 })

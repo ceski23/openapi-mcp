@@ -20,25 +20,21 @@ export const listVersions = defineTool({
             content: [
                 {
                     type: 'text' as const,
-                    text: JSON.stringify(
-                        {
-                            source: cached.source,
-                            current: {
-                                specId,
-                                loadedAt: cached.loadedAt,
-                                ...(currentVersion ? { version: currentVersion } : {}),
-                            },
-                            history: versions.map((version) => ({
-                                specId: version.specId,
-                                loadedAt: version.loadedAt,
-                                ...(version.definition?.info?.version
-                                    ? { version: version.definition.info.version }
-                                    : {}),
-                            })),
+                    text: JSON.stringify({
+                        source: cached.source,
+                        current: {
+                            specId,
+                            loadedAt: cached.loadedAt,
+                            ...(currentVersion ? { version: currentVersion } : {}),
                         },
-                        null,
-                        2,
-                    ),
+                        history: versions.map((version) => ({
+                            specId: version.specId,
+                            loadedAt: version.loadedAt,
+                            ...(version.definition?.info?.version
+                                ? { version: version.definition.info.version }
+                                : {}),
+                        })),
+                    }),
                 },
             ],
         }
