@@ -1,3 +1,10 @@
+# [1.2.0](https://github.com/ceski23/openapi-mcp/compare/v1.1.0...v1.2.0) (2026-07-22)
+
+
+### Features
+
+* compact tool responses ([dce6c64](https://github.com/ceski23/openapi-mcp/commit/dce6c649f596e1e0ca33d21ff5718c9c49efd27a))
+
 # [1.1.0](https://github.com/ceski23/openapi-mcp/compare/v1.0.0...v1.1.0) (2026-07-07)
 
 
