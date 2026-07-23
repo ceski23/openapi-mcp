@@ -338,8 +338,8 @@
             "get": {
                 "tags": ["pet"],
                 "summary": "Find pet by ID.",
-            "description": "Returns a single pet by ID.",
-            "operationId": "getPetById",
+                "description": "Returns a single pet by ID.",
+                "operationId": "getPetById",
                 "parameters": [
                     {
                         "name": "petId",

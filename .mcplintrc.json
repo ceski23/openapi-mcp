@@ -1,0 +1,6 @@
+{
+    "rules": {
+        "gemini/no-optional-without-default": "off"
+    },
+    "clients": ["claude", "cursor", "gemini", "vscode", "windsurf", "openai"]
+}

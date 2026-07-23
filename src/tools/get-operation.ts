@@ -4,12 +4,22 @@ import { MISSING_SPEC_RESPONSE, defineTool } from '../utils'
 
 export const getOperation = defineTool({
     name: 'get_operation',
+    title: 'Get Operation',
     description:
-        'Retrieve full details for a single API operation by operationId, including method, path, parameters, requestBody, and responses.',
-    inputSchema: z.object({
-        specId: z.string().describe('The spec ID returned by load_spec'),
-        operationId: z.string().describe('The operationId of the endpoint to retrieve'),
-    }),
+        'Retrieve full details for a single API operation by operationId, including method, path, parameters, requestBody, and responses. Returns {method, path, ...schema} with the full operation details.',
+    inputSchema: z
+        .object({
+            specId: z
+                .string()
+                .meta({ title: 'Spec ID' })
+                .describe('The spec ID returned by load_spec'),
+            operationId: z
+                .string()
+                .meta({ title: 'Operation ID' })
+                .describe('The operationId of the endpoint to retrieve'),
+        })
+        .strict()
+        .meta({ title: 'Get Operation Parameters' }),
     execute: ({ specId, operationId }) => {
         const cached = getSpec(specId)
         const oas = cached?.oas

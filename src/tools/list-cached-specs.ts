@@ -4,9 +4,10 @@ import { defineTool } from '../utils'
 
 export const listCachedSpecs = defineTool({
     name: 'list_cached_specs',
+    title: 'List Cached Specs',
     description:
         'List all currently cached OpenAPI specs with their specIds, sources, titles, and versions.',
-    inputSchema: z.object({}),
+    inputSchema: z.object({}).strict().meta({ title: 'List Cached Specs Parameters' }),
     execute: () => {
         const specs = getAllCachedSpecs()
 

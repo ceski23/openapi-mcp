@@ -18,6 +18,12 @@ jobs:
             - name: Run linter
               run: bun run lint
 
+            - name: Install oasdiff (required for diff_specs tests)
+              run: curl -fsSL https://raw.githubusercontent.com/oasdiff/oasdiff/main/install.sh | version=1.25.1 sudo sh
+
+            - name: Run tests
+              run: bun run test
+
             - name: Run type checks
               run: bun run typecheck
 

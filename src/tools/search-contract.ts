@@ -48,26 +48,40 @@ function buildSchemaDocs(spec: OASDocument): SchemaDoc[] {
 
 export const searchContract = defineTool({
     name: 'search_contract',
+    title: 'Search Contract',
     description:
-        'Search across the entire API contract — operations and schemas — by matching against operationIds, summaries, tags, paths, schema names, schema descriptions, property names, property descriptions, and enum values. The best first call when exploring an API.',
-    inputSchema: z.object({
-        specId: z.string().describe('The spec ID returned by load_spec'),
-        query: z
-            .string()
-            .describe(
-                'Search query to match against operationIds, summaries, tags, paths, schema names, schema descriptions, property names, property descriptions, and enum values',
-            ),
-        page: z.number().int().min(1).optional().default(1).describe('Page number (1-indexed).'),
-        limit: z
-            .number()
-            .int()
-            .min(1)
-            .optional()
-            .default(20)
-            .describe(
-                'Maximum number of results per page (applied to both operations and schemas).',
-            ),
-    }),
+        'Search across the entire API contract — operations and schemas — by matching against operationIds, summaries, tags, paths, schema names, schema descriptions, property names, property descriptions, and enum values. Returns {page, limit, totalOperations, totalSchemas, operations?, schemas?}. The best first call when exploring an API.',
+    inputSchema: z
+        .object({
+            specId: z
+                .string()
+                .meta({ title: 'Spec ID' })
+                .describe('The spec ID returned by load_spec'),
+            query: z
+                .string()
+                .meta({ title: 'Query' })
+                .describe(
+                    'Search query to match against operationIds, summaries, tags, paths, schema names, schema descriptions, property names, property descriptions, and enum values',
+                ),
+            page: z
+                .number()
+                .min(1)
+                .optional()
+                .meta({ title: 'Page' })
+                .default(1)
+                .describe('Page number (1-indexed).'),
+            limit: z
+                .number()
+                .min(1)
+                .optional()
+                .meta({ title: 'Limit' })
+                .default(20)
+                .describe(
+                    'Maximum number of results per page (applied to both operations and schemas).',
+                ),
+        })
+        .strict()
+        .meta({ title: 'Search Contract Parameters' }),
     execute: ({ specId, query, page = 1, limit = 20 }) => {
         const cached = getSpec(specId)
         const spec = cached?.oas?.getDefinition()

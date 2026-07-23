@@ -8,5 +8,5 @@ export default defineConfig({
     tabWidth: 4,
     useTabs: false,
     insertFinalNewline: true,
-    ignorePatterns: ['**/node_modules/**', 'bun.lock'],
+    ignorePatterns: ['**/node_modules/**', 'bun.lock', 'CHANGELOG.md'],
 })

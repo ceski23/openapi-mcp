@@ -4,35 +4,55 @@ import { MISSING_SPEC_RESPONSE, defineTool, iterateOperations, matchesQuery } fr
 
 export const findOperations = defineTool({
     name: 'find_operations',
+    title: 'Find Operations',
     description:
-        'Search for API operations in the loaded spec by matching against operationId, path, summary, tags, and descriptions. Use when you know approximately what you need but not the exact endpoint.',
-    inputSchema: z.object({
-        specId: z.string().describe('The spec ID returned by load_spec'),
-        query: z
-            .string()
-            .optional()
-            .describe(
-                'Search query to match against operation names, paths, summaries, and tags. Omit or leave empty to return EVERY operation in the spec — can be thousands of results on large APIs. Pair with `tags` or `methods` to narrow down before omitting query.',
-            ),
-        tags: z
-            .array(z.string())
-            .optional()
-            .describe(
-                'Filter to operations that have at least one of the listed tags (e.g. ["pet", "store"]).',
-            ),
-        methods: z
-            .array(z.enum(['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS', 'HEAD', 'TRACE']))
-            .optional()
-            .describe('Filter to operations with any of the listed HTTP methods.'),
-        page: z.number().int().min(1).optional().default(1).describe('Page number (1-indexed).'),
-        limit: z
-            .number()
-            .int()
-            .min(1)
-            .optional()
-            .default(50)
-            .describe('Maximum number of results per page.'),
-    }),
+        'Search for API operations in the loaded spec by matching against operationId, path, summary, tags, and descriptions. Returns paginated results with {total, page, limit, results: [{operationId, method, path, tags?, summary?}]}. Use when you know approximately what you need but not the exact endpoint.',
+    inputSchema: z
+        .object({
+            specId: z
+                .string()
+                .meta({ title: 'Spec ID' })
+                .describe('The spec ID returned by load_spec'),
+            query: z
+                .string()
+                .optional()
+                .meta({ title: 'Query' })
+                .describe(
+                    'Search query to match against operation names, paths, summaries, and tags. Omit or leave empty to return EVERY operation in the spec — can be thousands of results on large APIs. Pair with `tags` or `methods` to narrow down before omitting query.',
+                ),
+            tags: z
+                .array(z.string())
+                .optional()
+                .meta({ title: 'Tags' })
+                .describe(
+                    'Filter results to operations tagged with any of the given tags (e.g. ["users", "billing"]).',
+                ),
+            methods: z
+                .array(
+                    z.enum(['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS', 'HEAD', 'TRACE']),
+                )
+                .optional()
+                .meta({ title: 'HTTP Methods' })
+                .describe(
+                    'Filter to operations with any of the listed HTTP methods (e.g. ["GET", "POST"]).',
+                ),
+            page: z
+                .number()
+                .min(1)
+                .optional()
+                .meta({ title: 'Page' })
+                .default(1)
+                .describe('Page number (1-indexed).'),
+            limit: z
+                .number()
+                .min(1)
+                .optional()
+                .meta({ title: 'Limit' })
+                .default(50)
+                .describe('Maximum number of results per page.'),
+        })
+        .strict()
+        .meta({ title: 'Find Operations Parameters' }),
     execute: ({ specId, query, tags, methods, page = 1, limit = 50 }) => {
         const cached = getSpec(specId)
         const spec = cached?.oas?.getDefinition()

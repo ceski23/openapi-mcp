@@ -26,27 +26,34 @@ const resolveSpecDef = (spec: string) => {
 
 export const diffSpecs = defineTool({
     name: 'diff_specs',
+    title: 'Diff Specs',
     description:
         'Compare two loaded OpenAPI specs. Returns a structured diff (summary or detailed) or a human-readable markdown changelog. Requires oasdiff on PATH. Warning: the "detailed" format can produce very large output on sizable specs; prefer "summary" or "markdown" for a concise view.',
-    inputSchema: z.object({
-        base: z
-            .string()
-            .describe(
-                'Baseline spec (the "old" version). Pass a specId from load_spec, or a source URL/path to resolve to the latest cached load.',
-            ),
-        compare: z
-            .string()
-            .describe(
-                'Comparison spec (the "new" version). Pass a specId from load_spec, or a source URL/path to resolve to the latest cached load.',
-            ),
-        format: z
-            .enum(['detailed', 'summary', 'markdown'])
-            .optional()
-            .default('markdown')
-            .describe(
-                'Output format: "summary" for change counts only, "detailed" for full structured diff with path/component details, "markdown" for a human-readable changelog',
-            ),
-    }),
+    inputSchema: z
+        .object({
+            base: z
+                .string()
+                .meta({ title: 'Base Spec' })
+                .describe(
+                    'Baseline spec (the "old" version). Pass a specId from load_spec, or a source URL/path to resolve to the latest cached load.',
+                ),
+            compare: z
+                .string()
+                .meta({ title: 'Compare Spec' })
+                .describe(
+                    'Comparison spec (the "new" version). Pass a specId from load_spec, or a source URL/path to resolve to the latest cached load.',
+                ),
+            format: z
+                .enum(['detailed', 'summary', 'markdown'])
+                .optional()
+                .meta({ title: 'Format' })
+                .default('markdown')
+                .describe(
+                    'Output format: "summary" for change counts only, "detailed" for full structured diff with path/component details, "markdown" for a human-readable changelog',
+                ),
+        })
+        .strict()
+        .meta({ title: 'Diff Specs Parameters' }),
     execute: async ({ base, compare, format }) => {
         const oasdiffAvailable = await execPromise('oasdiff --help').then(
             ({ stdout, stderr }) => stderr.trim() === '' && stdout.trim() !== '',

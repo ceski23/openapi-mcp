@@ -4,12 +4,22 @@ import { MISSING_SPEC_RESPONSE, defineTool, iteratePathItem } from '../utils'
 
 export const getPath = defineTool({
     name: 'get_path',
+    title: 'Get Path',
     description:
         'Retrieve all operations (GET, POST, PATCH, DELETE, etc.) for a specific path. Returns a summary of each method on the path. Use get_operation with the operationId for full details.',
-    inputSchema: z.object({
-        specId: z.string().describe('The spec ID returned by load_spec'),
-        path: z.string().describe('The exact path from the spec (e.g. /customers/{id})'),
-    }),
+    inputSchema: z
+        .object({
+            specId: z
+                .string()
+                .meta({ title: 'Spec ID' })
+                .describe('The spec ID returned by load_spec'),
+            path: z
+                .string()
+                .meta({ title: 'Path' })
+                .describe('The exact path from the spec (e.g. /customers/{id})'),
+        })
+        .strict()
+        .meta({ title: 'Get Path Parameters' }),
     execute: ({ specId, path }) => {
         const cached = getSpec(specId)
         const spec = cached?.oas?.getDefinition()

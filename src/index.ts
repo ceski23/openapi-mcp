@@ -11,14 +11,14 @@ import { searchContract } from './tools/search-contract'
 import { diffSpecs } from './tools/diff-specs'
 import { listVersions } from './tools/list-versions'
 import { listCachedSpecs } from './tools/list-cached-specs'
-import { unloadSpec } from './tools/unload-spec'
+import { removeSpec } from './tools/remove-spec'
 
 const server = new McpServer({
     name: 'openapi-mcp',
     version: '0.1.0',
 })
 
-for (const { name, description, inputSchema, execute } of [
+for (const { name, title, description, inputSchema, execute } of [
     loadSpec,
     findOperations,
     getOperation,
@@ -29,9 +29,9 @@ for (const { name, description, inputSchema, execute } of [
     listVersions,
     listCachedSpecs,
     diffSpecs,
-    unloadSpec,
+    removeSpec,
 ]) {
-    server.registerTool(name, { description, inputSchema }, execute)
+    server.registerTool(name, { title, description, inputSchema }, execute)
 }
 
 const transport = new StdioServerTransport()

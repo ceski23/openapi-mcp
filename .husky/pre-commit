@@ -1,0 +1,8 @@
+bun run check
+bun run typecheck
+bun run test
+
+bun run build
+bun run check:config
+bun run check:mcpgrade
+bun run check:mcplint

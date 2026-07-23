@@ -25,7 +25,10 @@
         "build": "bun build src/index.ts --target=node --outdir=dist --packages=external",
         "prepublishOnly": "bun run build",
         "test": "bun test",
-        "check:config": "publint"
+        "check:config": "publint",
+        "check:mcpgrade": "mcpgrade --stdio \"bun dist/index.js\"",
+        "check:mcplint": "mcp-lint check --server stdio -- bun dist/index.js",
+        "prepare": "husky"
     },
     "dependencies": {
         "@modelcontextprotocol/sdk": "1.29.0",
@@ -39,6 +42,9 @@
         "@semantic-release/changelog": "6.0.3",
         "@semantic-release/git": "10.0.1",
         "@types/bun": "latest",
+        "husky": "9.1.7",
+        "mcp-lint": "0.5.3",
+        "mcpgrade": "0.1.0",
         "oxfmt": "0.56.0",
         "oxlint": "1.71.0",
         "publint": "0.3.21",

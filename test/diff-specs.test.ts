@@ -29,7 +29,7 @@ describe('diff_specs tool', () => {
     test('returns detailed diff between two different specs', async () => {
         const result = await client.callTool({
             name: 'diff_specs',
-            arguments: { base: specIdA, compare: specIdB },
+            arguments: { base: specIdA, compare: specIdB, format: 'detailed' },
         })
         const output = JSON.parse((result.content as { text: string }[])[0]!.text)
 
@@ -60,7 +60,7 @@ describe('diff_specs tool', () => {
     test('returns empty diff when comparing spec to itself', async () => {
         const result = await client.callTool({
             name: 'diff_specs',
-            arguments: { base: specIdA, compare: specIdA },
+            arguments: { base: specIdA, compare: specIdA, format: 'detailed' },
         })
         const output = JSON.parse((result.content as { text: string }[])[0]!.text)
 
@@ -78,7 +78,7 @@ describe('diff_specs tool', () => {
     test('description changes are detected in paths', async () => {
         const result = await client.callTool({
             name: 'diff_specs',
-            arguments: { base: specIdA, compare: specIdB },
+            arguments: { base: specIdA, compare: specIdB, format: 'detailed' },
         })
         const output = JSON.parse((result.content as { text: string }[])[0]!.text)
 
@@ -124,6 +124,7 @@ describe('diff_specs tool', () => {
             arguments: {
                 base: 'test/fixtures/petstore.json',
                 compare: 'test/fixtures/petstore-v2.json',
+                format: 'detailed',
             },
         })
         const output = JSON.parse((result.content as { text: string }[])[0]!.text)
@@ -139,6 +140,7 @@ describe('diff_specs tool', () => {
             arguments: {
                 base: specIdA,
                 compare: 'test/fixtures/petstore-v2.json',
+                format: 'detailed',
             },
         })
         const output = JSON.parse((result.content as { text: string }[])[0]!.text)
@@ -161,7 +163,7 @@ describe('diff_specs tool', () => {
     test('specId takes priority when same string matches both specId and source', async () => {
         const result = await client.callTool({
             name: 'diff_specs',
-            arguments: { base: specIdA, compare: specIdB },
+            arguments: { base: specIdA, compare: specIdB, format: 'detailed' },
         })
         const output = JSON.parse((result.content as { text: string }[])[0]!.text)
 

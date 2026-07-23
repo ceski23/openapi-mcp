@@ -11,10 +11,10 @@ beforeEach(async () => {
     client = ctx.client
 })
 
-describe('unload_spec', () => {
+describe('remove_spec', () => {
     test('removes a spec from cache', async () => {
         const result = await client.callTool({
-            name: 'unload_spec',
+            name: 'remove_spec',
             arguments: { specId },
         })
         const data = JSON.parse((result.content as { text: string }[])[0]!.text)
@@ -24,7 +24,7 @@ describe('unload_spec', () => {
 
     test('making subsequent calls with unloaded specId returns error', async () => {
         await client.callTool({
-            name: 'unload_spec',
+            name: 'remove_spec',
             arguments: { specId },
         })
 
@@ -37,7 +37,7 @@ describe('unload_spec', () => {
 
     test('returns error for invalid specId', async () => {
         const result = await client.callTool({
-            name: 'unload_spec',
+            name: 'remove_spec',
             arguments: { specId: crypto.randomUUID() },
         })
         expect(result.isError).toBe(true)

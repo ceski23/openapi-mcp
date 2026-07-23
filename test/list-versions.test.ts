@@ -68,7 +68,7 @@ describe('list_versions tool', () => {
         })
         const output = JSON.parse((result.content as { text: string }[])[0]!.text)
 
-        expect(output.history[0].loadedAt).toBeGreaterThan(0)
+        expect(new Date(output.history[0].loadedAt).getTime()).toBeGreaterThan(0)
     })
 
     test('invalid specId returns error', async () => {

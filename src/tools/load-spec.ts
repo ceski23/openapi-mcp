@@ -6,13 +6,20 @@ import { defineTool } from '../utils'
 
 export const loadSpec = defineTool({
     name: 'load_spec',
+    title: 'Load Spec',
     description:
-        'Load and parse an OpenAPI/Swagger specification from a URL or local file path. Parses and validates the spec, returning a specId for use by other tools.',
-    inputSchema: z.object({
-        source: z
-            .string()
-            .describe('URL or local file path to the OpenAPI/Swagger specification (JSON or YAML)'),
-    }),
+        'Load and parse an OpenAPI/Swagger specification from a URL or local file path. Parses and validates the spec, returning a specId for use by other tools. Returns {success, specId, title, version, description, endpoints, schemas, source, previousVersion?, versions}.',
+    inputSchema: z
+        .object({
+            source: z
+                .string()
+                .meta({ title: 'Source' })
+                .describe(
+                    'URL or local file path to the OpenAPI/Swagger specification (JSON or YAML)',
+                ),
+        })
+        .strict()
+        .meta({ title: 'Load Spec Parameters' }),
     execute: async ({ source }) => {
         try {
             const normalizer = new OASNormalize(source, { enablePaths: true })

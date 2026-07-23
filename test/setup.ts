@@ -11,7 +11,7 @@ import { searchContract } from '../src/tools/search-contract'
 import { diffSpecs } from '../src/tools/diff-specs'
 import { listVersions } from '../src/tools/list-versions'
 import { listCachedSpecs } from '../src/tools/list-cached-specs'
-import { unloadSpec } from '../src/tools/unload-spec'
+import { removeSpec } from '../src/tools/remove-spec'
 
 export type TestContext = {
     server: McpServer
@@ -35,10 +35,10 @@ export async function createTestContext(): Promise<TestContext> {
         diffSpecs,
         listVersions,
         listCachedSpecs,
-        unloadSpec,
+        removeSpec,
     ]
-    for (const { name, description, inputSchema, execute } of tools) {
-        server.registerTool(name, { description, inputSchema }, execute)
+    for (const { name, title, description, inputSchema, execute } of tools) {
+        server.registerTool(name, { title, description, inputSchema }, execute)
     }
 
     await Promise.all([client.connect(clientTransport), server.connect(serverTransport)])
